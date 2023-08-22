@@ -1,0 +1,8 @@
+PyPDF2
+langchain
+openai
+tiktoken
+faiss-cpu
+pypdf
+sentence_transformers
+CTransformers

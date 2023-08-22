@@ -10,9 +10,9 @@ user@xyz:~/git-repos$ conda activate yourenvname
 
 Clone the repository and navigate inside
 
-(yourenvname) user@xyz:~/git-repos$ git clone https://github.com/FSU-CS-EXPLORER-LAB/PySim.git
-(yourenvname) user@xyz:~/git-repos$ cd ./PySim
-(yourenvname) user@xyz:~/git-repos/PySim$
+(yourenvname) user@xyz:~/git-repos$ https://github.com/sappyb/llmmemory.git
+(yourenvname) user@xyz:~/git-repos$ cd ./llmmemory
+(yourenvname) user@xyz:~/git-repos/llmmemory$ 
 
 Run setup
 
