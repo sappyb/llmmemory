@@ -26,3 +26,9 @@ pip install -r requirements.txt -e .
 ```shell
 streamlit run app.py
 ```
+
+## Description
+
+1. Solves congitive states of students
+2. Knowledge stored in vector databases
+3. Added Memory to conversation
