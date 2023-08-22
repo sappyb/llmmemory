@@ -22,6 +22,12 @@ user@xyz:~/git-repos$ conda activate yourenvname
 ```shell
 pip install -r requirements.txt -e .
 ```
+
+in windows
+```shell
+pip install -r requirements.txt
+```
+
 ## Run
 ```shell
 streamlit run app.py
