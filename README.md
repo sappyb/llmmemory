@@ -1,4 +1,4 @@
-# Evelyn - Web chatbot
+# Evelyn - Web chatbot with llmmemory
 
 ## Requirments:
 ```shell
