@@ -75,7 +75,7 @@ def get_conversation_chain(vectorstore, model, student_type):
                                                  retriever=vectorstore.as_retriever(),
                                                  return_source_documents = True)
 
-    no_op_chain = NoOpLLMChain()
+    no_op_chain = NoOpLLMChain(llm=llm)
     conv_rqa.question_generator = no_op_chain
     if student_type == 'General':
         modified_template = general_prompt()
@@ -131,9 +131,18 @@ def main():
     user_question = st.text_input("Ask a question as if you were talking to a student:")
     if user_question:
         handle_userinput(user_question)
+    st.button("Clear memory", on_click=lambda: st.session_state.chat_history.clear())
+
+    #st.button("Clear chat", on_click=lambda: st.stop())
 
     with st.sidebar:
+        #select model
+        model = select_model()
+
+        #select student type
+        student_type = select_student_type()
         st.subheader("Your documents")
+
         pdf_docs = st.file_uploader(
             "Upload your PDFs here and click on 'Process'", accept_multiple_files=True)
         if st.button("Process"):
@@ -144,11 +153,7 @@ def main():
                     st.error("Please upload at least one PDF")
                     st.stop()
                 else:
-                     #select model
-                    model = select_model()
-
-                    #select student type
-                    student_type = select_student_type()
+ 
 
                     # get the text chunks
                     text_chunks = get_text_chunks(raw_text)
