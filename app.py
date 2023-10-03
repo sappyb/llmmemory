@@ -21,7 +21,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts.chat import SystemMessagePromptTemplate
 from htmlTempletes import css, bot_template, user_template
 from questionmaker import NoOpLLMChain
-from prompts import general_prompt, engaged_student_prompt
+from prompts import general_prompt, engaged_student_prompt, engagedlow_student_prompt, engagedchild_student_prompt
 import os
 import tiktoken
 
@@ -81,6 +81,10 @@ def get_conversation_chain(vectorstore, model, student_type):
         modified_template = general_prompt()
     elif student_type == 'Engaged':
         modified_template = engaged_student_prompt()
+    elif student_type == 'Engaged Low':
+        modified_template = engagedlow_student_prompt()
+    elif student_type == 'Engaged Child':
+        modified_template = engagedchild_student_prompt()
     system_message_prompt = SystemMessagePromptTemplate.from_template(modified_template)
     conv_rqa.combine_docs_chain.llm_chain.prompt.messages[0] = system_message_prompt
 
@@ -98,7 +102,7 @@ def select_model():
 def select_student_type():
     student_type = st.selectbox(
     'Select the type of student you want to be',
-    ('General', 'Engaged'))
+    ('General', 'Engaged', 'Engaged Low', 'Engaged Child'))
     return student_type
 
 
@@ -134,7 +138,6 @@ def main():
     st.button("Clear memory", on_click=lambda: st.session_state.chat_history.clear())
 
     #st.button("Clear chat", on_click=lambda: st.stop())
-
     with st.sidebar:
         #select model
         model = select_model()
