@@ -1,8 +1,16 @@
 PyPDF2
 langchain
-openai
 tiktoken
 faiss-cpu
 pypdf
 sentence_transformers
 CTransformers
+transformers
+PyMuPDF
+openai==0.28
+langchain-community
+streamlit
+python-dotenv
+
+
+
