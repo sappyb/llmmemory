@@ -1,0 +1,121 @@
+/*  
+    Evelyn AI Conginitive States
+
+    0 - Engaged
+    1 -  Distressed
+    2 - Fatigued
+    3 - Anxious
+    4 - Bored
+    5 - Fedup
+    
+*/
+
+integer myid = 15;
+integer scenerio_id = 300002;
+integer npc_ai_chat_channel = 35;
+integer channel; // This is the channel where the chat is communicated blue dialog box
+integer state_change_channel; // This is the channel where the state change is communicated
+integer listen_handle;
+integer listen_handle_state;
+integer ai_state = 0;
+integer npc_action_control_base_channel = 33000;
+integer npc_channel;
+
+
+key request;
+
+string inputs;
+string url = "";
+
+
+// 34.125.109.29
+default
+{
+   state_entry()
+    {
+        llRequestURL();
+        channel = myid + scenerio_id + npc_ai_chat_channel;
+        npc_channel = npc_action_control_base_channel + myid;
+        state_change_channel = scenerio_id + npc_channel;
+        llSay(0, (string)state_change_channel);
+        listen_handle = llListen(channel, "", "", "");
+        listen_handle_state = llListen(state_change_channel, "", "", "");
+    }
+    http_request(key rid, string method, string body){
+        if (method == URL_REQUEST_GRANTED){
+            url = body;
+        }
+        else if (method == URL_REQUEST_DENIED){
+            llOwnerSay("URL CANNOT BE GRANTED");
+        }
+        else if (method == "POST"){
+            if(body == "Test")
+            {
+                /* Nothing added here yet */
+            }
+        }
+        else if (method == "GET"){
+            llHTTPResponse(rid, 200, "This is from inworld object");
+        }
+    }
+    touch_start(integer n){
+        llTextBox(llDetectedKey(0), "Type the query", channel);
+        llSleep(1);
+    }
+    listen(integer ch, string name, key id, string message)
+    {
+        if (ch == channel){
+            if (ai_state == 0){
+                llSay(0, "Running Engaged");
+                string final_message = message + ": ENGAGED";
+                inputs = "http://34.125.109.29//test.php?test="+message;
+                request = llHTTPRequest(inputs, [], "");
+            }
+            else if (ai_state == 1){
+                 llSay(0, "Running Distressed"); 
+                 string final_message = message + ": DISTRESSED";
+                inputs = "http://34.125.109.29//test.php?test="+message;// Change
+                request = llHTTPRequest(inputs, [], "");
+            }
+            else if (ai_state == 2){
+                llSay(0, "Running Fatigued");
+                 string final_message = message + ": FATIGUED";
+                inputs = "http://34.125.109.29//test.php?test="+message;// Change
+                request = llHTTPRequest(inputs, [], "");
+            }
+             else if (ai_state == 3){
+                llSay(0, "Running Anxious");
+                 string final_message = message + ": ANXIOUS";
+                inputs = "http://34.125.109.29//test.php?test="+message;// Change
+                request = llHTTPRequest(inputs, [], "");
+            }
+             else if (ai_state == 4){
+                llSay(0, "Running Bored");
+                 string final_message = message + ": BORED";
+                inputs = "http://34.125.109.29//test.php?test="+message;// Change
+                request = llHTTPRequest(inputs, [], "");
+            }
+             else if (ai_state == 5){
+                llSay(0, "Running Fedup");
+                 string final_message = message + ": FEDUP";
+                inputs = "http://34.125.109.29//test.php?test="+message;// Change
+                request = llHTTPRequest(inputs, [], "");
+            }
+            else{
+                llSay(0, "Invalid State");
+            }
+        }
+        if (ch == state_change_channel){
+            ai_state = (integer)message;
+            llSay(0, " Got the feedback " + (string) ai_state);
+        }
+    }
+
+    http_response(key rid, integer status, list metadata, string body){
+        if (rid == request){
+                list desc = llParseString2List(body, ["_"], []);
+                llSay(npc_channel, llList2String(desc, 1));
+                llSay(0, llList2String(desc, 0));
+        }
+    }    
+}
