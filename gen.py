@@ -25,9 +25,11 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts.chat import SystemMessagePromptTemplate
 from htmlTempletes import css, bot_template, user_template
 from questionmaker import NoOpLLMChain
-from prompts import low_understanding_engaged_student_prompt, medium_understanding_engaged_student_prompt, low_understanding_bored_student_prompt, high_understanding_fed_up_student_prompt
+from prompts import low_understanding_engaged_student_prompt, high_understanding_engaged_student_prompt, low_understanding_engaged_student_prompt, medium_understanding_engaged_student_prompt, low_understanding_bored_student_prompt, high_understanding_fed_up_student_prompt, zero_shot_high_understanding__student_prompt, few_shot_reasoning_medium_understanding_student_prompt, few_shot_reasoning_low_understanding_student_prompt
 import os
+#from langchain_ollama import ChatOllama
 import tiktoken
+from langchain_community.llms import HuggingFaceEndpoint
 
 def get_pdf_text(pdf_docs):
     text = ""
@@ -62,11 +64,18 @@ def get_conversation_chain(vectorstore, model, student_type='Engaged Low'):
     #create llm
     if model == 'OpenAI GPT 3.5': 
         llm = ChatOpenAI()
+    elif model == 'gpt-4-turbo-preview': 
+        llm = ChatOpenAI(model_name="gpt-4-turbo-preview")
     elif model == 'Google flan-t5-xxl':
         llm = HuggingFaceHub(repo_id="google/flan-t5-xxl", model_kwargs={"temperature":0.5, "max_length":512})
     elif model == 'Facebook LLAMA':
         pass
+        #llm = ChatOllama(model = "llama3")
         #llm = CTransformers(model="llama-2-7b-chat.ggmlv3.q4_0.bin",model_type="llama",config={'max_new_tokens':128,'temperature':0.01})
+    elif model == 'Mistral':
+        HUGGINGFACEHUB_API_TOKEN = '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'
+        repo_id = "mistralai/Mistral-7B-Instruct-v0.2"
+        llm = HuggingFaceEndpoint(repo_id=repo_id, max_length=128, temperature=0.5, token=HUGGINGFACEHUB_API_TOKEN)
     else:
         print('Model name not valid')
     #create memory type
@@ -82,23 +91,35 @@ def get_conversation_chain(vectorstore, model, student_type='Engaged Low'):
     no_op_chain = NoOpLLMChain(llm=llm)
     conv_rqa.question_generator = no_op_chain
     if student_type == 'General':
-        modified_template = low_understanding_bored_student_prompt()
+        modified_template = low_understanding_engaged_student_prompt()
     elif student_type == 'Engaged':
         modified_template = medium_understanding_engaged_student_prompt()
-    elif student_type == 'Engaged Low':
-        modified_template = low_understanding_engaged_student_prompt()
-    elif student_type == 'Engaged Child':
+    elif student_type == 'zero shot high':
+        modified_template = zero_shot_high_understanding__student_prompt()
+    elif student_type == 'few shot low':
+        modified_template = few_shot_reasoning_low_understanding_student_prompt()
+    elif student_type == 'few shot medium':
+        modified_template = few_shot_reasoning_medium_understanding_student_prompt()
+    elif student_type == 'Fedup_H':
         modified_template = high_understanding_fed_up_student_prompt()
     system_message_prompt = SystemMessagePromptTemplate.from_template(modified_template)
-    conv_rqa.combine_docs_chain.llm_chain.prompt.messages[0] = system_message_prompt
+    if hasattr(conv_rqa.combine_docs_chain.llm_chain.prompt, 'messages'):
+        conv_rqa.combine_docs_chain.llm_chain.prompt.messages[0] = system_message_prompt
+    else:
+        print("The 'messages' attribute does not exist in the prompt object.")
 
     # add chat_history as a variable to the llm_chain's ChatPromptTemplate object
     conv_rqa.combine_docs_chain.llm_chain.prompt.input_variables = ['context', 'question', 'chat_history']
   
     return conv_rqa
 
-def select_model():
-    model = 'OpenAI GPT 3.5'
+def select_model(model='OpenAI'):
+    if model == 'OpenAI':
+       model = 'gpt-4-turbo-preview'
+       #model = 'OpenAI GPT 3.5'
+       #model = 'Facebook LLAMA'
+    else:
+        model = 'Mistral'
     return model
 
 
@@ -107,13 +128,26 @@ def handle_userinput(user_question):
     chat_history = response['chat_history']
 
 def main():
+    student_type = input("""Enter student type: 
+
+            1. General(Low understanding engaged ), 
+            2. Engaged(Medium understanding engaged), 
+            3. Few shot medium (In development), 
+            4. Few shot low (In Development),
+            5. Fedup_H (High understanding Fedup student),
+            6. Zero shot high (In development)
+            
+            :: """)
     load_dotenv()
 
     #select model
-    model = select_model()
+    model = select_model(model=str(input('''Enter :
+        1. OpenAI
+        2. Mistral
+        :: ''')))
 
     #select student type
-    pdf_docs = ["/home/isltmile/evelyn6_train.pdf"]
+    pdf_docs = ["./train_docs/BaselineSyntheticData_October10_2023.pdf"]
     # get pdf text
     raw_text = get_pdf_text(pdf_docs)  
     if raw_text == "":
@@ -125,7 +159,7 @@ def main():
         vectorstore = get_vectorstore(text_chunks)
         # create conversation chain
         conversation = get_conversation_chain(
-                        vectorstore, model)
+                        vectorstore, model, student_type)
     host = '127.0.0.1'
     port = int(2004)
     s = socket.socket()
@@ -136,6 +170,12 @@ def main():
         conn, addr = s.accept()
         user_question = conn.recv(100000)
         user_question = user_question.decode("utf-8")
+        if ":" in user_question:
+            print(user_question)
+            student_state = user_question.split(":")[-1].strip()
+            user_question = user_question.split(":")[0].strip()
+            print(user_question)
+            print("user_question is printed")
         if user_question == "Exit":
             conn.close()
         if user_question:
@@ -144,6 +184,9 @@ def main():
              sid_obj = SentimentIntensityAnalyzer()
              sentiment_question = sid_obj.polarity_scores(user_question)['compound']
              sentiment_mean = (sentiment_question)
+             print("Question : {}".format(user_question))
+             print("Response : {}".format(response['answer']))
+             voice_response = "{}==={}".format("Student_1", response['answer'])
              response_final = "{}_{}".format(response['answer'], sentiment_mean)
              conn.send(response_final.encode())
     conn.close()
