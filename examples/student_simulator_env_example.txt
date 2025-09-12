@@ -1,0 +1,27 @@
+# Student Understanding Emotion Reasoning Simulator Configuration
+# Copy this file to .env and fill in your values
+
+# Server Configuration
+SERVER_HOST=127.0.0.1
+SERVER_PORT=2004
+MAX_CONNECTIONS=5
+BUFFER_SIZE=100000
+TIMEOUT=30
+
+# Model Configuration
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_MODEL=gpt-4-turbo-preview
+MAX_TOKENS=128
+TEMPERATURE=0.7
+EMBEDDING_MODEL=all-MiniLM-L6-v2
+
+# Data Configuration
+DATA_PATH=./train_docs/Updated_Extracted_Data.csv
+CHUNK_SIZE=1000
+CHUNK_OVERLAP=200
+MAX_RETRIEVAL_RESULTS=117
+
+# Logging Configuration
+LOG_LEVEL=INFO
+LOG_FORMAT=%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s
+LOG_FILE=student_simulator.log

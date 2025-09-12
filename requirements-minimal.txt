@@ -1,0 +1,24 @@
+
+# Minimal requirements for Evelyn AI
+# Core dependencies
+python-dotenv>=1.0.0
+pandas>=1.5.0
+numpy>=1.21.0
+
+# AI/ML dependencies
+openai>=0.28.0
+langchain>=0.2.0
+langchain-community>=0.2.0
+sentence-transformers>=2.2.0
+faiss-cpu>=1.7.0
+vaderSentiment>=3.3.0
+
+# Web interface
+streamlit>=1.20.0
+
+# PDF processing
+PyPDF2>=3.0.0
+pypdf>=3.0.0
+
+# Utilities
+tiktoken>=0.5.0

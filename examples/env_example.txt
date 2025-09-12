@@ -1,0 +1,25 @@
+# Evelyn AI Socket Server Configuration
+# Copy this file to .env and fill in your values
+
+# Server Configuration
+SERVER_HOST=127.0.0.1
+SERVER_PORT=2004
+MAX_CONNECTIONS=5
+BUFFER_SIZE=100000
+TIMEOUT=30
+
+# Model Configuration
+DEFAULT_MODEL=gpt-4-turbo-preview
+OPENAI_API_KEY=your_openai_api_key_here
+MISTRAL_API_TOKEN=your_mistral_api_token_here
+HUGGINGFACE_API_TOKEN=your_huggingface_api_token_here
+
+# Document Configuration
+DEFAULT_PDF_PATH=./train_docs/BaselineSyntheticData_October10_2023.pdf
+CHUNK_SIZE=1000
+CHUNK_OVERLAP=200
+EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+
+# Logging Configuration
+LOG_LEVEL=INFO
+LOG_FILE=evelyn_ai.log
