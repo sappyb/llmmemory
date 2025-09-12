@@ -5,11 +5,11 @@ import socket
 
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
-from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
+from langchain.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceInstructEmbeddings, HuggingFaceEmbeddings
-from langchain_community.vectorstores import FAISS
-from langchain_community.chat_models import ChatOpenAI
+from langchain.embeddings import OpenAIEmbeddings, HuggingFaceInstructEmbeddings, HuggingFaceEmbeddings
+from langchain.vectorstores import FAISS
+from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain, RetrievalQA
 from langchain import LLMChain
@@ -25,17 +25,11 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts.chat import SystemMessagePromptTemplate
 from htmlTempletes import css, bot_template, user_template
 from questionmaker import NoOpLLMChain
-from prompts import low_understanding_engaged_student_prompt, high_understanding_engaged_student_prompt, low_understanding_engaged_student_prompt, medium_understanding_engaged_student_prompt, low_understanding_analogy_student_prompt, high_understanding_fed_up_student_prompt, zero_shot_high_understanding__student_prompt, few_shot_reasoning_medium_understanding_student_prompt, few_shot_reasoning_low_understanding_student_prompt
+from prompts import low_understanding_engaged_student_prompt, high_understanding_engaged_student_prompt, low_understanding_engaged_student_prompt, medium_understanding_engaged_student_prompt, low_understanding_bored_student_prompt, high_understanding_fed_up_student_prompt, zero_shot_high_understanding__student_prompt, few_shot_reasoning_medium_understanding_student_prompt, few_shot_reasoning_low_understanding_student_prompt
 import os
 #from langchain_ollama import ChatOllama
 import tiktoken
 from langchain_community.llms import HuggingFaceEndpoint
-
-from pydantic import BaseModel
-
-class SummarizerMixin(BaseModel):
-    class Config:
-        arbitrary_types_allowed = True
 
 def get_pdf_text(pdf_docs):
     text = ""
@@ -99,7 +93,7 @@ def get_conversation_chain(vectorstore, model, student_type='Engaged Low'):
     if student_type == 'General':
         modified_template = low_understanding_engaged_student_prompt()
     elif student_type == 'Engaged':
-        modified_template = low_understanding_analogy_student_prompt()
+        modified_template = medium_understanding_engaged_student_prompt()
     elif student_type == 'zero shot high':
         modified_template = zero_shot_high_understanding__student_prompt()
     elif student_type == 'few shot low':
@@ -137,7 +131,7 @@ def main():
     student_type = input("""Enter student type: 
 
             1. General(Low understanding engaged ), 
-            2. Engaged(Analogy student), 
+            2. Engaged(Medium understanding engaged), 
             3. Few shot medium (In development), 
             4. Few shot low (In Development),
             5. Fedup_H (High understanding Fedup student),
