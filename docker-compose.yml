@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  evelyn-web:
+    build: .
+    container_name: evelyn-ai-web
+    ports:
+      - "8501:8501"
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=2004
+      - LOG_LEVEL=INFO
+      - LOG_FILE=/app/logs/evelyn_ai.log
+    volumes:
+      - ./logs:/app/logs
+      - ./train_docs:/app/train_docs
+      - ./.env:/app/.env
+    command: ["python", "main.py", "web"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  evelyn-server:
+    build: .
+    container_name: evelyn-ai-server
+    ports:
+      - "2004:2004"
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=2004
+      - LOG_LEVEL=INFO
+      - LOG_FILE=/app/logs/evelyn_ai.log
+    volumes:
+      - ./logs:/app/logs
+      - ./train_docs:/app/train_docs
+      - ./.env:/app/.env
+    command: ["python", "main.py", "server"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.connect(('localhost', 2004)); s.close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  evelyn-test:
+    build: .
+    container_name: evelyn-ai-test
+    environment:
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./logs:/app/logs
+      - ./train_docs:/app/train_docs
+      - ./.env:/app/.env
+    command: ["python", "test.py"]
+    depends_on:
+      - evelyn-server
+    profiles:
+      - test
+
+volumes:
+  logs:
+  data:

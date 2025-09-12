@@ -12,8 +12,8 @@ from langchain.docstore import InMemoryDocstore
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
-from student_simulator_config import AppConfig
-from logger import get_logger
+from .student_simulator_config import AppConfig
+from .logger import get_logger
 
 logger = get_logger(__name__)
 

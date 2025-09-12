@@ -5,12 +5,12 @@ import os
 from typing import List, Optional
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
-from langchain.chat_models import ChatOpenAI
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_community.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
-from langchain.llms import HuggingFaceHub
+from langchain_community.llms import HuggingFaceHub
 from langchain_community.llms import HuggingFaceEndpoint
 from langchain.prompts.chat import SystemMessagePromptTemplate
 
@@ -23,7 +23,7 @@ from prompts import (
     few_shot_reasoning_medium_understanding_student_prompt,
     high_understanding_fed_up_student_prompt
 )
-from logger import get_logger
+from .logger import get_logger
 
 logger = get_logger(__name__)
 

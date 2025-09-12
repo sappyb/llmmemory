@@ -9,11 +9,11 @@ import sys
 from typing import Optional, Dict, Any, Tuple
 from contextlib import contextmanager
 
-from student_simulator_config import AppConfig
-from student_persona_manager import StudentPersonaManager, StudentPersona
-from student_data_processor import StudentDataProcessor
-from response_generator import ResponseGenerator, ResponseContext
-from logger import get_logger
+from .student_simulator_config import AppConfig
+from .student_persona_manager import StudentPersonaManager, StudentPersona
+from .student_data_processor import StudentDataProcessor
+from .response_generator import ResponseGenerator, ResponseContext
+from .logger import get_logger
 
 logger = get_logger(__name__)
 

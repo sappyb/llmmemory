@@ -1,0 +1,34 @@
+# Docker Compose override for development
+# This file is automatically loaded by docker-compose
+# Use this for development-specific overrides
+
+version: '3.8'
+
+services:
+  evelyn-web:
+    environment:
+      - LOG_LEVEL=DEBUG
+      - PYTHONPATH=/app
+    volumes:
+      - .:/app  # Mount source code for development
+    command: ["python", "main.py", "web"]
+    stdin_open: true
+    tty: true
+
+  evelyn-server:
+    environment:
+      - LOG_LEVEL=DEBUG
+      - PYTHONPATH=/app
+    volumes:
+      - .:/app  # Mount source code for development
+    command: ["python", "main.py", "server"]
+    stdin_open: true
+    tty: true
+
+  evelyn-test:
+    environment:
+      - LOG_LEVEL=DEBUG
+      - PYTHONPATH=/app
+    volumes:
+      - .:/app  # Mount source code for development
+    command: ["python", "test.py"]

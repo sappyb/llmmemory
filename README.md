@@ -22,7 +22,25 @@ A sophisticated AI-powered system for simulating student interactions with diffe
 
 ## 🚀 Quick Start
 
-### 1. Installation
+### Option 1: Docker (Recommended)
+```bash
+# Clone and switch to Docker branch
+git clone <repository-url>
+cd llmmemory
+git checkout docker-containerization
+
+# Configure environment
+cp examples/student_simulator_env_example.txt .env
+nano .env  # Add your API keys
+
+# Build and run
+./docker-build.sh
+./docker-run.sh  # Web interface
+# or
+./docker-run.sh -m server -p 2004  # Socket server
+```
+
+### Option 2: Local Installation
 ```bash
 # Clone the repository
 git clone <repository-url>
@@ -30,27 +48,24 @@ cd llmmemory
 
 # Install dependencies
 pip install -r requirements.txt
-```
 
-### 2. Configuration
-```bash
-# Copy environment template
+# Configure environment
 cp examples/student_simulator_env_example.txt .env
+nano .env  # Add your API keys
 
-# Edit .env with your API keys
-nano .env
+# Run the application
+python main.py web          # Web interface
+python main.py server       # Socket server
 ```
 
-### 3. Run the Application
+### Option 3: Docker Compose
 ```bash
-# Start web interface
-python main.py web
+# Start all services
+docker-compose up
 
-# Start socket server
-python main.py server
-
-# Start server on custom port
-python main.py server --port 3000 --host 0.0.0.0
+# Start specific service
+docker-compose up evelyn-web
+docker-compose up evelyn-server
 ```
 
 ## 📁 Repository Structure
@@ -230,6 +245,7 @@ Edit `prompt_folders/prompts.py` to modify student response patterns.
 
 ## 📚 Documentation
 
+- [Docker Guide](DOCKER.md) - Complete Docker containerization guide
 - [General Improvements](docs/IMPROVEMENTS.md) - Overview of code improvements
 - [Student Simulator Improvements](docs/STUDENT_SIMULATOR_IMPROVEMENTS.md) - Detailed improvements for student simulator
 

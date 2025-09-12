@@ -7,9 +7,9 @@ from typing import Dict, Optional, List
 from dataclasses import dataclass
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-from student_simulator_config import AppConfig
-from student_persona_manager import StudentPersona
-from logger import get_logger
+from .student_simulator_config import AppConfig
+from .student_persona_manager import StudentPersona
+from .logger import get_logger
 
 logger = get_logger(__name__)
 

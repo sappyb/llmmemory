@@ -4,7 +4,7 @@ Handles student context mapping and persona definitions
 """
 from typing import Dict, Optional, List
 from dataclasses import dataclass
-from logger import get_logger
+from .logger import get_logger
 
 logger = get_logger(__name__)
 
