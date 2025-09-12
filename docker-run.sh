@@ -118,7 +118,7 @@ if [ "$MODE" = "web" ]; then
         -v "$(pwd)/train_docs:/app/train_docs" \
         -v "$(pwd)/.env:/app/.env" \
         "${FULL_IMAGE_NAME}" \
-        python main.py web
+        python improved_versions/gen_understanding_emotion_reasoning_improved.py
 elif [ "$MODE" = "server" ]; then
     echo -e "${GREEN}🔌 Starting socket server on ${HOST}:${PORT}${NC}"
     docker run -it --rm \
@@ -127,7 +127,7 @@ elif [ "$MODE" = "server" ]; then
         -v "$(pwd)/train_docs:/app/train_docs" \
         -v "$(pwd)/.env:/app/.env" \
         "${FULL_IMAGE_NAME}" \
-        python main.py server
+        python improved_versions/gen_understanding_emotion_reasoning_improved.py
 else
     echo -e "${RED}Error: Invalid mode '${MODE}'. Use 'web' or 'server'.${NC}"
     exit 1

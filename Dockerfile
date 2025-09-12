@@ -45,4 +45,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8501/healthz || exit 1
 
 # Default command (can be overridden)
-CMD ["python", "main.py", "web"]
+CMD ["python", "improved_versions/gen_understanding_emotion_reasoning_improved.py"]

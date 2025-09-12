@@ -10,9 +10,9 @@ from pathlib import Path
 # Add current directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from student_simulator_config import load_config
-from logger import setup_logger
-from student_simulator_server import StudentSimulatorServer
+from core.student_simulator_config import load_config
+from core.logger import setup_logger
+from core.student_simulator_server import StudentSimulatorServer
 
 class StudentSimulatorApp:
     """Main application class for Student Understanding Emotion Reasoning Simulator"""

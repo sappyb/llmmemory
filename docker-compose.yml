@@ -15,7 +15,7 @@ services:
       - ./logs:/app/logs
       - ./train_docs:/app/train_docs
       - ./.env:/app/.env
-    command: ["python", "main.py", "web"]
+    command: ["python", "improved_versions/gen_understanding_emotion_reasoning_improved.py"]
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8501/healthz"]
@@ -38,7 +38,7 @@ services:
       - ./logs:/app/logs
       - ./train_docs:/app/train_docs
       - ./.env:/app/.env
-    command: ["python", "main.py", "server"]
+    command: ["python", "improved_versions/gen_understanding_emotion_reasoning_improved.py"]
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.connect(('localhost', 2004)); s.close()"]
